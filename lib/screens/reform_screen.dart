@@ -77,7 +77,7 @@ class _ReformScreenState extends State<ReformScreen>{
     year.dispose();await load();
   }
   @override Widget build(BuildContext context)=>Scaffold(
-    body:busy?const Center(child:CircularProgressIndicator()):RefreshIndicator(onRefresh:load,child:rows.isEmpty?const ListView(children:[SizedBox(height:160),Center(child:Text('Aucun matériel à traiter.'))]):ListView.separated(
+    body:busy?const Center(child:CircularProgressIndicator()):RefreshIndicator(onRefresh:load,child:rows.isEmpty?ListView(children:const [SizedBox(height:160),Center(child:Text('Aucun matériel à traiter.'))]):ListView.separated(
       itemCount:rows.length,separatorBuilder:(_,__)=>const Divider(height:1),
       itemBuilder:(context,i){
         final item=rows[i];final proposed=item['statut_mat']=='PR';
