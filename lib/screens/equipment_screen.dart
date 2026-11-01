@@ -109,8 +109,9 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                 : rows.isEmpty
                     ? const Center(child: Text('Aucun matériel trouvé.'))
                     : ListView.separated(
+                        padding: const EdgeInsets.fromLTRB(12, 4, 12, 88),
                         itemCount: rows.length,
-                        separatorBuilder: (_, __) => const Divider(height: 1),
+                        separatorBuilder: (_, __) => const SizedBox(height: 4),
                         itemBuilder: (context, index) {
                           final item = rows[index];
                           final name = [
@@ -126,18 +127,41 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                             item['lib_str'],
                             if (user.isNotEmpty) user,
                           ].where((value) => value != null && '$value'.isNotEmpty).join(' • ');
-                          return ListTile(
-                            leading: const CircleAvatar(child: Icon(Icons.computer)),
-                            title: Text(
-                              '${item['num_inv'] ?? 'Sans inventaire'}',
-                              style: const TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Text(subtitle),
-                            trailing: Text(_status(item['statut_mat'])),
-                            onTap: () => showModalBottomSheet<void>(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (_) => _EquipmentDetails(item: item),
+                          final statusColor = _statusColor(item['statut_mat']);
+
+                          return Card(
+                            margin: EdgeInsets.zero,
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: statusColor.withValues(alpha: 0.13),
+                                foregroundColor: statusColor,
+                                child: const Icon(Icons.computer),
+                              ),
+                              title: Text(
+                                '${item['num_inv'] ?? 'Sans inventaire'}',
+                                style: const TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                              subtitle: Text(subtitle),
+                              trailing: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: statusColor.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  _status(item['statut_mat']),
+                                  style: TextStyle(
+                                    color: statusColor,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              onTap: () => showModalBottomSheet<void>(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (_) => _EquipmentDetails(item: item),
+                              ),
                             ),
                           );
                         },
@@ -161,6 +185,13 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
       ),
     );
   }
+
+  Color _statusColor(Object? value) => switch (value) {
+    'ES' => const Color(0xFF258477),
+    'PR' => const Color(0xFFE19A38),
+    'RF' => const Color(0xFF7A6AA6),
+    _ => const Color(0xFF247BA0),
+  };
 
   String _status(Object? value) => switch (value) {
     'ES' => 'En service',
