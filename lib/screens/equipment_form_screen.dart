@@ -49,22 +49,37 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
     if (!_key.currentState!.validate()) return;
     setState(() => saving = true);
     try {
-      await GparcDatabase.instance.db.insert('materiel', {
-        'id_str': structureId,
-        'id_typ_mat': typeId,
-        'marque_mat': _brand.text.trim(),
-        'num_inv': _inventory.text.trim(),
-        'num_ser': _serial.text.trim(),
-        'etat_mat': 'BON',
-        'statut_mat': 'ES',
-        'etat_reforme': 'AUCUNE',
-        'cpu': _cpu.text.trim(),
-        'ram': int.tryParse(_ram.text.trim()),
-        'disk': int.tryParse(_disk.text.trim()),
-        'se': _os.text.trim(),
-        'obs_mat': _notes.text.trim(),
-        'id_uti': userId,
-        'dat_mod': DateTime.now().toIso8601String(),
+      final db = GparcDatabase.instance.db;
+      await db.transaction((txn) async {
+        final id = await txn.insert('materiel', {
+          'id_str': structureId,
+          'id_typ_mat': typeId,
+          'marque_mat': _brand.text.trim(),
+          'num_inv': _inventory.text.trim(),
+          'num_ser': _serial.text.trim(),
+          'etat_mat': 'BON',
+          'statut_mat': 'ES',
+          'etat_reforme': 'AUCUNE',
+          'cpu': _cpu.text.trim(),
+          'ram': int.tryParse(_ram.text.trim()),
+          'disk': int.tryParse(_disk.text.trim()),
+          'se': _os.text.trim(),
+          'obs_mat': _notes.text.trim(),
+          'id_uti': userId,
+          'dat_mod': DateTime.now().toIso8601String(),
+        });
+        if (structureId != null || userId != null) {
+          await txn.insert('affect_mat', {
+            'id_mat': id,
+            'id_str': structureId,
+            'id_typ_mat': typeId,
+            'num_inv': _inventory.text.trim(),
+            'num_ser': _serial.text.trim(),
+            'id_uti': userId,
+            'action_aff': 'NOUVELLE_AFFECTATION',
+            'obs_aff': 'Affectation initiale depuis GParc Mobile',
+          });
+        }
       });
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
