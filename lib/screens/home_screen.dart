@@ -3,6 +3,7 @@ import '../data/gparc_database.dart';
 import 'equipment_screen.dart';
 import 'faults_screen.dart';
 import 'settings_screen.dart';
+import 'reform_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
       const EquipmentScreen(),
       const FaultsScreen(),
       SettingsScreen(onImported:refresh),
+      const ReformScreen(),
     ];
     return Scaffold(
       appBar: AppBar(title: const Text('GParc Mobile'), actions:[IconButton(tooltip:'Actualiser',onPressed:refresh,icon:const Icon(Icons.refresh))]),
@@ -35,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
         NavigationDestination(icon:Icon(Icons.devices),label:'Parc'),
         NavigationDestination(icon:Icon(Icons.build_outlined),label:'Pannes'),
         NavigationDestination(icon:Icon(Icons.storage),label:'Base'),
+      NavigationDestination(icon:Icon(Icons.assignment_outlined),label:'Réforme'),
       ]),
     );
   }
