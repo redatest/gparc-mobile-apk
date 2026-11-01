@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/gparc_database.dart';
 import 'scanner_screen.dart';
+import 'equipment_form_screen.dart';
 
 class EquipmentScreen extends StatefulWidget {
   const EquipmentScreen({super.key});
@@ -27,7 +28,9 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
     if(code!=null){controller.text=code;await load();}
   }
   @override
-  Widget build(BuildContext context)=>Column(children:[
+  Widget build(BuildContext context)=>Scaffold(
+    floatingActionButton: FloatingActionButton.extended(onPressed:() async { final created=await Navigator.push<bool>(context,MaterialPageRoute(builder:(_)=>const EquipmentFormScreen())); if(created==true) await load(); }, icon:const Icon(Icons.add), label:const Text('Ajouter')),
+    body:Column(children:[
     Padding(padding:const EdgeInsets.fromLTRB(12,12,12,4),child:Row(children:[
       Expanded(child:TextField(controller:controller,decoration:const InputDecoration(prefixIcon:Icon(Icons.search),hintText:'Inventaire, série, marque…',suffixIcon:Icon(Icons.search)),onChanged:(_)=>load())),
       const SizedBox(width:8),IconButton.filledTonal(onPressed:scan,icon:const Icon(Icons.qr_code_scanner),tooltip:'Scanner'),
@@ -40,7 +43,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
       final user=[m['nom_uti'],m['pnom_uti']].where((x)=>x!=null&&'$x'.isNotEmpty).join(' ');
       return ListTile(leading:const CircleAvatar(child:Icon(Icons.computer)),title:Text('${m['num_inv']??'Sans inventaire'}',style:const TextStyle(fontWeight:FontWeight.w600)),subtitle:Text([name,m['lib_str'],if(user.isNotEmpty)user].where((x)=>x!=null&&'$x'.isNotEmpty).join(' • ')),trailing:Text(_status(m['statut_mat'])),onTap:()=>showModalBottomSheet(context:context,isScrollControlled:true,builder:(_)=>_EquipmentDetails(item:m)));
     })),
-  ]);
+  ]));
   Widget _filterChip(String label,String value)=>Padding(padding:const EdgeInsets.only(right:6),child:ChoiceChip(label:Text(label),selected:filter==value,onSelected:(_){setState(()=>filter=value);load();}));
   String _status(Object? value)=>switch(value){'ES'=>'En service','PR'=>'À réformer','RF'=>'Réformé',_=>'—'};
 }
