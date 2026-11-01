@@ -41,7 +41,7 @@ class _FaultFormScreenState extends State<FaultFormScreen> {
   @override Widget build(BuildContext context)=>Scaffold(
     appBar:AppBar(title:const Text('Déclarer une panne')),
     body:Form(key:_key,child:ListView(padding:const EdgeInsets.all(16),children:[
-      DropdownButtonFormField<int>(value:materialId,decoration:const InputDecoration(labelText:'Matériel *'),items:equipment.map((m)=>DropdownMenuItem(value:m['id_mat'] as int,child:Text('${m['num_inv']} · ${m['marque_mat']??''}'))).toList(),onChanged:(v)=>setState(()=>materialId=v),validator:(v)=>v==null?'Sélectionner un matériel':null),
+      DropdownButtonFormField<int>(initialValue:materialId,decoration:const InputDecoration(labelText:'Matériel *'),items:equipment.map((m)=>DropdownMenuItem(value:m['id_mat'] as int,child:Text('${m['num_inv']} · ${m['marque_mat']??''}'))).toList(),onChanged:(v)=>setState(()=>materialId=v),validator:(v)=>v==null?'Sélectionner un matériel':null),
       const SizedBox(height:12),
       TextFormField(controller:_diagnosis,maxLines:3,decoration:const InputDecoration(labelText:'Diagnostic / anomalie *'),validator:(v)=>v==null||v.trim().isEmpty?'Champ obligatoire':null),
       const SizedBox(height:12),
