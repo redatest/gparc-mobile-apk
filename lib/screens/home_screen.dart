@@ -179,8 +179,8 @@ class _Dashboard extends StatelessWidget {
               onTap: onOpenEquipment,
             ),
           ),
-          Card(
-            child: const ListTile(
+          const Card(
+            child: ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 7),
               leading: CircleAvatar(
                 backgroundColor: Color(0xFFE1F2EC),
