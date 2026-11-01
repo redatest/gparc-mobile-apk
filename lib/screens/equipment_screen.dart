@@ -20,7 +20,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
     setState(()=>busy=true);
     final q=controller.text.trim();
     final data=q.isEmpty?await GparcDatabase.instance.listEquipment(filter:filter):await GparcDatabase.instance.searchEquipment(q);
-    if(mounted)setState(()=>rows=data,busy=false);
+    if(mounted)setState(() { rows=data; busy=false; });
   }
   Future<void> scan() async {
     final code=await Navigator.push<String>(context,MaterialPageRoute(builder:(_)=>const ScannerScreen()));
