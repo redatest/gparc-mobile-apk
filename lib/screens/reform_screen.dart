@@ -86,7 +86,7 @@ class _ReformScreenState extends State<ReformScreen>{
           title:Text('${item['num_inv']??''}'),
           subtitle:Text('${item['marque_mat']??''} · ${item['lib_str']??''}\n${proposed?'Proposé · année ${item['annee_reforme']??'—'} · lot ${item['lot_reforme']??'—'}':'En service'}'),
           isThreeLine:true,
-          trailing:proposed?PopupMenuButton<String>(onSelected:(v){if(v=='finalize')_finalize(item);if(v=='cancel')_cancelProposal(item);},itemBuilder:(_)=>[PopupMenuItem(value:'finalize',child:const Text('Confirmer la réforme')),PopupMenuItem(value:'cancel',child:const Text('Annuler la proposition'))]):IconButton(tooltip:'Proposer à la réforme',onPressed:()=>_propose(item),icon:const Icon(Icons.playlist_add)),
+          trailing:proposed?PopupMenuButton<String>(onSelected:(v){if(v=='finalize')_finalize(item);if(v=='cancel')_cancelProposal(item);},itemBuilder:(_)=>[const PopupMenuItem(value:'finalize',child:Text('Confirmer la réforme')),const PopupMenuItem(value:'cancel',child:Text('Annuler la proposition'))]):IconButton(tooltip:'Proposer à la réforme',onPressed:()=>_propose(item),icon:const Icon(Icons.playlist_add)),
         );
       },
     )),
