@@ -4,7 +4,8 @@ Application Android native Flutter/Dart de gestion du parc informatique, conçue
 
 ## Principes
 
-- Flutter et Dart ; aucune WebView.
+- Flutter et Dart pour toute l'application ; aucune WebView.
+- Hôte Android minimal généré en Java par Flutter (aucune logique métier native Kotlin).
 - Base SQLite locale, importée depuis un fichier `.db` Gparc.
 - Aucun serveur, Flask, Python, Oracle ou synchronisation réseau.
 - Les données restent sur l'appareil.
@@ -33,6 +34,7 @@ L'import d'une base existante doit être réalisé depuis l'écran de gestion de
 Prérequis : Flutter stable avec Android SDK.
 
 ```bash
+flutter create --platforms=android --android-language java --org dz.sonelgaz --project-name gparc_mobile .
 flutter pub get
 flutter analyze
 flutter test
