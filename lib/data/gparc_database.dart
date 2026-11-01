@@ -74,19 +74,79 @@ class GparcDatabase {
   }
 
   Future<String?> importDatabase() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['db','sqlite','sqlite3'], withData: true);
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['db', 'sqlite', 'sqlite3'],
+      withData: true,
+    );
     if (result == null || result.files.isEmpty) return null;
-    final file = result.files.single;
+
+    final selected = result.files.single;
     final docs = await getApplicationDocumentsDirectory();
     final target = p.join(docs.path, 'gparc.db');
-    final backup = p.join(docs.path, 'gparc-before-import-${DateTime.now().millisecondsSinceEpoch}.db');
-    if (await File(target).exists()) await File(target).copy(backup);
-    if (file.path != null) { await File(file.path!).copy(target); }
-    else if (file.bytes != null) { await File(target).writeAsBytes(file.bytes!, flush: true); }
-    else { throw Exception('Le fichier sélectionné est inaccessible.'); }
-    await _db?.close();
-    _db = await openDatabase(target, version: 1, onConfigure: (d) async => d.execute('PRAGMA foreign_keys = ON'));
-    return target;
+    final temporary = p.join(docs.path, 'gparc-import-${DateTime.now().millisecondsSinceEpoch}.db');
+    final backup = p.join(docs.path, 'gparc-backup-${DateTime.now().millisecondsSinceEpoch}.db');
+
+    try {
+      if (selected.path != null) {
+        await File(selected.path!).copy(temporary);
+      } else if (selected.bytes != null) {
+        await File(temporary).writeAsBytes(selected.bytes!, flush: true);
+      } else {
+        throw Exception('Le fichier sélectionné est inaccessible.');
+      }
+
+      // Contrôle d'intégrité et de compatibilité avant de toucher à la base active.
+      final candidate = await openDatabase(temporary, readOnly: true);
+      try {
+        final integrity = await candidate.rawQuery('PRAGMA integrity_check');
+        if (integrity.isEmpty || integrity.first.values.first != 'ok') {
+          throw Exception('Le fichier SQLite est endommagé.');
+        }
+        final tables = await candidate.rawQuery(
+          "SELECT name FROM sqlite_master WHERE type='table' AND name='materiel'",
+        );
+        if (tables.isEmpty) {
+          throw Exception('Cette base ne contient pas la table materiel de GParc.');
+        }
+        final columns = await candidate.rawQuery('PRAGMA table_info(materiel)');
+        final names = columns.map((row) => row['name']).toSet();
+        if (!names.contains('num_inv') || !names.contains('num_ser') || !names.contains('id_mat')) {
+          throw Exception('La structure de la table materiel est incompatible.');
+        }
+      } finally {
+        await candidate.close();
+      }
+
+      await _db?.close();
+      _db = null;
+      if (await File(target).exists()) {
+        await File(target).copy(backup);
+        await File(target).delete();
+      }
+      await File(temporary).rename(target);
+      _db = await openDatabase(
+        target,
+        version: 1,
+        onConfigure: (database) async => database.execute('PRAGMA foreign_keys = ON'),
+      );
+      return target;
+    } catch (_) {
+      if (await File(temporary).exists()) await File(temporary).delete();
+      if (_db == null) {
+        if (!await File(target).exists() && await File(backup).exists()) {
+          await File(backup).copy(target);
+        }
+        if (await File(target).exists()) {
+          _db = await openDatabase(
+            target,
+            version: 1,
+            onConfigure: (database) async => database.execute('PRAGMA foreign_keys = ON'),
+          );
+        }
+      }
+      rethrow;
+    }
   }
 
   Future<String> databasePath() async {
