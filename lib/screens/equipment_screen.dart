@@ -4,7 +4,9 @@ import 'scanner_screen.dart';
 import 'equipment_form_screen.dart';
 
 class EquipmentScreen extends StatefulWidget {
-  const EquipmentScreen({super.key});
+  const EquipmentScreen({super.key, this.initialQuery = ''});
+
+  final String initialQuery;
 
   @override
   State<EquipmentScreen> createState() => _EquipmentScreenState();
@@ -19,6 +21,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
   @override
   void initState() {
     super.initState();
+    controller.text = widget.initialQuery;
     load();
   }
 
