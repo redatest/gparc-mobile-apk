@@ -92,7 +92,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         ORDER BY total DESC, s.lib_str COLLATE NOCASE
       ''');
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
       setState(() {
         structures = structureRows;
         structureTotals = byStructure;
@@ -143,7 +145,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           const Text('Analyse des équipements par structure et par catégorie.'),
           const SizedBox(height: 16),
           DropdownButtonFormField<int?>(
-            value: selectedStructureId,
+            initialValue: selectedStructureId,
             isExpanded: true,
             decoration: const InputDecoration(
               labelText: 'Structure',
