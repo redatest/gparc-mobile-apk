@@ -33,6 +33,8 @@ jobs:
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 30
+      - name: Prepare stable APK filename
+        run: cp build/app/outputs/flutter-apk/app-debug.apk build/app/outputs/flutter-apk/gparc-mobile.apk
       - name: Publish latest APK
         uses: softprops/action-gh-release@v2
         with:
@@ -42,6 +44,6 @@ jobs:
           body: APK Debug généré automatiquement après validation de l'analyse Flutter, des tests et de la compilation.
           prerelease: true
           make_latest: false
-          files: build/app/outputs/flutter-apk/app-debug.apk
+          files: build/app/outputs/flutter-apk/gparc-mobile.apk
           overwrite_files: true
           fail_on_unmatched_files: true
