@@ -23,7 +23,7 @@ class GparcApp extends StatelessWidget {
     );
 
     return MaterialApp(
-      title: 'GParc Mobile',
+      title: 'GParc Inventaire',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
