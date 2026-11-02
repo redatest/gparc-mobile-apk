@@ -124,16 +124,18 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   @override
   Widget build(BuildContext context) {
     if (busy) return const Center(child: CircularProgressIndicator());
-    if (error != null) return Center(child: Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        const Icon(Icons.error_outline, color: Colors.red, size: 36),
-        const SizedBox(height: 12),
-        Text(error!, textAlign: TextAlign.center),
-        const SizedBox(height: 12),
-        FilledButton.icon(onPressed: _load, icon: const Icon(Icons.refresh), label: const Text('Réessayer')),
-      ]),
-    ));
+    if (error != null) {
+      return Center(child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const Icon(Icons.error_outline, color: Colors.red, size: 36),
+          const SizedBox(height: 12),
+          Text(error!, textAlign: TextAlign.center),
+          const SizedBox(height: 12),
+          FilledButton.icon(onPressed: _load, icon: const Icon(Icons.refresh), label: const Text('Réessayer')),
+        ]),
+      ));
+    }
 
     return RefreshIndicator(
       onRefresh: _load,
