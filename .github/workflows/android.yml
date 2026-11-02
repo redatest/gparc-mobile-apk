@@ -16,6 +16,10 @@ jobs:
           cache: true
       - name: Generate Android platform
         run: flutter create --platforms=android --android-language java --org dz.sonelgaz --project-name gparc_mobile .
+      - name: Install native shutter sound handler
+        run: |
+          mkdir -p android/app/src/main/java/dz/sonelgaz/gparc_mobile
+          cp tooling/MainActivity.java android/app/src/main/java/dz/sonelgaz/gparc_mobile/MainActivity.java
       - name: Install dependencies
         run: flutter pub get
       - name: Generate Android launcher icons
