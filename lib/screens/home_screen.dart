@@ -92,17 +92,33 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: pages[index],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: index,
-        onDestinationSelected: (v) => setState(() => index = v),
-        destinations: const [
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          labelTextStyle: WidgetStateProperty.resolveWith<TextStyle?>(
+            (states) => TextStyle(
+              fontSize: 9,
+              letterSpacing: -0.25,
+              fontWeight: states.contains(WidgetState.selected)
+                  ? FontWeight.w700
+                  : FontWeight.w500,
+            ),
+          ),
+          iconTheme: const WidgetStatePropertyAll(
+            IconThemeData(size: 20),
+          ),
+        ),
+        child: NavigationBar(
+          selectedIndex: index,
+          onDestinationSelected: (v) => setState(() => index = v),
+          destinations: const [
           NavigationDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), label: 'Accueil'),
           NavigationDestination(icon: Icon(Icons.devices), selectedIcon: Icon(Icons.devices_rounded), label: 'Parc'),
           NavigationDestination(icon: Icon(Icons.build_outlined), selectedIcon: Icon(Icons.build), label: 'Pannes'),
           NavigationDestination(icon: Icon(Icons.storage_outlined), selectedIcon: Icon(Icons.storage), label: 'Base'),
           NavigationDestination(icon: Icon(Icons.assignment_outlined), selectedIcon: Icon(Icons.assignment), label: 'Réforme'),
           NavigationDestination(icon: Icon(Icons.bar_chart_outlined), selectedIcon: Icon(Icons.bar_chart), label: 'Statistiques'),
-        ],
+          ],
+        ),
       ),
     );
   }
