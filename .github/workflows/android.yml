@@ -4,7 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,16 +18,30 @@ jobs:
         run: flutter create --platforms=android --android-language java --org dz.sonelgaz --project-name gparc_mobile .
       - name: Install dependencies
         run: flutter pub get
+      - name: Generate Android launcher icons
+        run: dart run flutter_launcher_icons
       - name: Analyze
         run: flutter analyze
       - name: Run tests
         run: flutter test
       - name: Build debug APK
         run: flutter build apk --debug
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: gparc-mobile-debug
           path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 30
+      - name: Publish latest APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          target_commitish: main
+          name: Dernier APK GParc Mobile
+          body: APK Debug généré automatiquement après validation de l'analyse Flutter, des tests et de la compilation.
+          prerelease: true
+          make_latest: false
+          files: build/app/outputs/flutter-apk/app-debug.apk
+          overwrite_files: true
+          fail_on_unmatched_files: true
