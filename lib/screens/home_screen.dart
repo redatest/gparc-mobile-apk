@@ -5,6 +5,7 @@ import 'faults_screen.dart';
 import 'settings_screen.dart';
 import 'reform_screen.dart';
 import 'scanner_screen.dart';
+import 'statistics_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
       const FaultsScreen(),
       SettingsScreen(onImported: refresh),
       const ReformScreen(),
+      const StatisticsScreen(),
     ];
 
     return Scaffold(
@@ -99,6 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
           NavigationDestination(icon: Icon(Icons.build_outlined), selectedIcon: Icon(Icons.build), label: 'Pannes'),
           NavigationDestination(icon: Icon(Icons.storage_outlined), selectedIcon: Icon(Icons.storage), label: 'Base'),
           NavigationDestination(icon: Icon(Icons.assignment_outlined), selectedIcon: Icon(Icons.assignment), label: 'Réforme'),
+          NavigationDestination(icon: Icon(Icons.bar_chart_outlined), selectedIcon: Icon(Icons.bar_chart), label: 'Statistiques'),
         ],
       ),
     );
@@ -174,7 +177,6 @@ class _Dashboard extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisCount: 2,
-            // Des cartes plus hautes évitent le débordement vertical sur les petits écrans.
             childAspectRatio: 1.15,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
