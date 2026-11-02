@@ -4,6 +4,7 @@ import 'equipment_screen.dart';
 import 'faults_screen.dart';
 import 'settings_screen.dart';
 import 'reform_screen.dart';
+import 'scanner_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,11 +16,24 @@ class _HomeScreenState extends State<HomeScreen> {
   int index = 0;
   Map<String, Object?> stats = {};
   bool loading = true;
+  String scannedQuery = '';
 
   @override
   void initState() {
     super.initState();
     refresh();
+  }
+
+  Future<void> _scanFromHome() async {
+    final code = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (_) => const ScannerScreen()),
+    );
+    if (!mounted || code == null || code.isEmpty) return;
+    setState(() {
+      scannedQuery = code;
+      index = 1;
+    });
   }
 
   Future<void> refresh() async {
@@ -39,8 +53,12 @@ class _HomeScreenState extends State<HomeScreen> {
         loading: loading,
         onRefresh: refresh,
         onOpenEquipment: () => setState(() => index = 1),
+        onScan: _scanFromHome,
       ),
-      const EquipmentScreen(),
+      EquipmentScreen(
+        key: ValueKey('equipment-$scannedQuery'),
+        initialQuery: scannedQuery,
+      ),
       const FaultsScreen(),
       SettingsScreen(onImported: refresh),
       const ReformScreen(),
@@ -50,13 +68,14 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(7),
-              decoration: BoxDecoration(
-                color: const Color(0xFF176B87).withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                'gparc inventaire.jpg',
+                width: 36,
+                height: 36,
+                fit: BoxFit.cover,
               ),
-              child: const Icon(Icons.devices_rounded, size: 21),
             ),
             const SizedBox(width: 10),
             const Text('GParc Mobile', style: TextStyle(fontWeight: FontWeight.w700)),
@@ -92,12 +111,14 @@ class _Dashboard extends StatelessWidget {
     required this.loading,
     required this.onRefresh,
     required this.onOpenEquipment,
+    required this.onScan,
   });
 
   final Map<String, Object?> stats;
   final bool loading;
   final VoidCallback onRefresh;
   final VoidCallback onOpenEquipment;
+  final VoidCallback onScan;
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +188,7 @@ class _Dashboard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Card(
+            clipBehavior: Clip.antiAlias,
             child: ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
               leading: const CircleAvatar(
@@ -178,6 +200,21 @@ class _Dashboard extends StatelessWidget {
               subtitle: const Text('Recherche par inventaire, série ou caractéristiques'),
               trailing: const Icon(Icons.chevron_right),
               onTap: onOpenEquipment,
+            ),
+          ),
+          Card(
+            clipBehavior: Clip.antiAlias,
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+              leading: const CircleAvatar(
+                backgroundColor: Color(0xFFE1F2EC),
+                foregroundColor: Color(0xFF258477),
+                child: Icon(Icons.qr_code_scanner_rounded),
+              ),
+              title: const Text('Scanner un équipement', style: TextStyle(fontWeight: FontWeight.w700)),
+              subtitle: const Text('Lire le code-barres pour retrouver le matériel'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: onScan,
             ),
           ),
           const Card(
