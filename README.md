@@ -1,39 +1,36 @@
-# Gparc Mobile
+# GParc Mobile
 
 Application Android native Flutter/Dart de gestion du parc informatique, conçue pour fonctionner **entièrement hors ligne**.
 
 ## Télécharger l'application
 
-**[Télécharger l'APK Android (version Debug)](https://github.com/redatest/gparc-mobile-apk/actions/runs/41351970376/artifacts/13102010385)**
+**[Télécharger le dernier APK Android](https://github.com/redatest/gparc-mobile-apk/releases/download/latest/gparc-mobile.apk)**
 
-- Build GitHub Actions : [consulter les résultats](https://github.com/redatest/gparc-mobile-apk/actions/runs/41351970376).
-- Analyse Flutter, tests et compilation : réussis.
-- Type : APK Debug, destiné aux essais.
-- L'artefact GitHub est conservé pendant **30 jours** après sa génération. Le lien direct expirera donc avec l'artefact.
-- Pour les builds ultérieurs : ouvrir l'onglet [Actions](https://github.com/redatest/gparc-mobile-apk/actions/workflows/android.yml), sélectionner le dernier workflow réussi, puis télécharger `gparc-mobile-debug` dans la section **Artifacts**.
+Ce lien est permanent : le workflow GitHub Actions remplace automatiquement le fichier APK de cette version à chaque compilation réussie sur `main`. Le lien du README n'a donc pas besoin d'être modifié à chaque commit.
 
-> L'APK a été compilé avec succès par CI. Son fonctionnement doit encore être validé sur des appareils Android réels avant toute diffusion en production.
+- [Consulter les compilations et les contrôles CI](https://github.com/redatest/gparc-mobile-apk/actions/workflows/android.yml).
+- APK Debug, destiné aux essais.
+- L'APK est publié uniquement si l'analyse Flutter, les tests et la compilation réussissent.
 
 ## Principes
 
 - Flutter et Dart pour toute l'application ; aucune WebView.
-- Hôte Android minimal généré en Java par Flutter (aucune logique métier native Kotlin).
+- Hôte Android minimal généré en Java par Flutter.
 - Base SQLite locale, importée depuis un fichier `.db` Gparc.
 - Aucun serveur, Flask, Python, Oracle ou synchronisation réseau.
 - Les données restent sur l'appareil.
 - Le dépôt source Gparc n'est pas modifié.
 
-## Fonctionnalités prévues
+## Fonctionnalités
 
 - Consultation, recherche et filtrage du parc.
+- Recherche par lecture de code-barres depuis l'accueil ou l'écran du parc.
 - Fiche détaillée d'un équipement et gestion des informations.
 - Utilisateurs, structures, types et modèles.
 - Affectations et historique.
 - Déclaration et suivi des pannes, réparations et réformes.
 - Tableau de bord et statistiques.
-- Lecture de codes-barres.
 - Import, export et sauvegarde de la base SQLite.
-- Impression / génération de fiches.
 
 ## Base de données
 
@@ -48,6 +45,7 @@ Prérequis : Flutter stable avec Android SDK.
 ```bash
 flutter create --platforms=android --android-language java --org dz.sonelgaz --project-name gparc_mobile .
 flutter pub get
+dart run flutter_launcher_icons
 flutter analyze
 flutter test
 flutter build apk --debug
@@ -55,8 +53,8 @@ flutter build apk --debug
 
 ## Compilation automatisée
 
-Le workflow GitHub Actions compile l'APK Android de debug à chaque push sur `main` et lors d'un déclenchement manuel.
+Le workflow GitHub Actions compile l'APK Android à chaque push sur `main` et lors d'un déclenchement manuel. Après validation, il publie l'APK sous le tag de release stable `latest` et conserve également l'artefact de compilation.
 
 ## État du projet
 
-Portage en cours. La compilation CI est validée ; les fonctionnalités et la compatibilité doivent encore être vérifiées sur appareils Android réels.
+Portage en cours. La compilation CI est contrôlée automatiquement ; les fonctionnalités et la compatibilité doivent être vérifiées sur appareils Android réels.
