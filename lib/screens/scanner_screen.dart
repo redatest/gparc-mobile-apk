@@ -1,12 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-class ScannerScreen extends StatefulWidget { const ScannerScreen({super.key}); @override State<ScannerScreen> createState()=>_ScannerScreenState(); }
-class _ScannerScreenState extends State<ScannerScreen>{
-  bool found=false;
-  @override Widget build(BuildContext context)=>Scaffold(appBar:AppBar(title:const Text('Scanner un code-barres')),body:Stack(children:[
-    MobileScanner(onDetect:(capture){if(found)return;final code=capture.barcodes.isNotEmpty ? capture.barcodes.first.rawValue : null;if(code!=null&&code.trim().isNotEmpty){found=true;Navigator.pop(context,code.trim());}}),
-    Center(child:Container(width:280,height:150,decoration:BoxDecoration(border:Border.all(color:Colors.greenAccent,width:3),borderRadius:BorderRadius.circular(12)))),
-    const Positioned(left:20,right:20,bottom:30,child:Card(child:Padding(padding:EdgeInsets.all(12),child:Text('Placez le code-barres dans le cadre. La détection est automatique.',textAlign:TextAlign.center)))),
-  ]));
+class ScannerScreen extends StatefulWidget {
+  const ScannerScreen({super.key});
+
+  @override
+  State<ScannerScreen> createState() => _ScannerScreenState();
+}
+
+class _ScannerScreenState extends State<ScannerScreen> {
+  bool found = false;
+
+  Future<void> _handleDetection(BarcodeCapture capture) async {
+    if (found) return;
+
+    final code = capture.barcodes.isNotEmpty
+        ? capture.barcodes.first.rawValue
+        : null;
+
+    if (code == null || code.trim().isEmpty) return;
+
+    // Bloque les détections suivantes pendant le son de confirmation.
+    found = true;
+    await SystemSound.play(SystemSoundType.click);
+
+    if (!mounted) return;
+    Navigator.pop(context, code.trim());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Scanner un code-barres')),
+      body: Stack(
+        children: [
+          MobileScanner(onDetect: _handleDetection),
+          Center(
+            child: Container(
+              width: 280,
+              height: 150,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.greenAccent, width: 3),
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          const Positioned(
+            left: 20,
+            right: 20,
+            bottom: 30,
+            child: Card(
+              child: Padding(
+                padding: EdgeInsets.all(12),
+                child: Text(
+                  'Placez le code-barres dans le cadre. La détection est automatique.',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
