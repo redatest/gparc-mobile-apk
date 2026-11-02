@@ -153,7 +153,8 @@ class _Dashboard extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisCount: 2,
-            childAspectRatio: 1.65,
+            // Des cartes plus hautes évitent le débordement vertical sur les petits écrans.
+            childAspectRatio: 1.15,
             crossAxisSpacing: 12,
             mainAxisSpacing: 12,
             children: [
@@ -214,27 +215,33 @@ class _Kpi extends StatelessWidget {
   Widget build(BuildContext context) => Card(
         margin: EdgeInsets.zero,
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
-                radius: 17,
+                radius: 15,
                 backgroundColor: color.withValues(alpha: 0.13),
                 foregroundColor: color,
                 child: Icon(icon, size: 19),
               ),
+              const SizedBox(height: 5),
               Text(
                 '$value',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: const Color(0xFF203746),
                       fontWeight: FontWeight.w700,
                     ),
               ),
+              const SizedBox(height: 2),
               Text(
                 label,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: const Color(0xFF657783),
                       fontWeight: FontWeight.w600,
                     ),
