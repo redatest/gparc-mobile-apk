@@ -142,7 +142,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                                 child: Icon(EquipmentTypeIcon.forType(item['lib_typ_mat'])),
                               ),
                               title: Text(
-                                '\${item['num_inv'] ?? 'Sans inventaire'}',
+                                '${item['num_inv'] ?? 'Sans inventaire'}',
                                 style: const TextStyle(fontWeight: FontWeight.w700),
                               ),
                               subtitle: Text(subtitle),
@@ -242,7 +242,7 @@ class _EquipmentDetails extends StatelessWidget {
             Text('Fiche matériel', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 12),
             ...entries.entries
-                .where((entry) => entry.value != null && '\${entry.value}'.isNotEmpty)
+                .where((entry) => entry.value != null && '${entry.value}'.isNotEmpty)
                 .map(
                   (entry) => Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
@@ -256,7 +256,7 @@ class _EquipmentDetails extends StatelessWidget {
                             style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
                         ),
-                        Expanded(child: Text('\${entry.value}')),
+                        Expanded(child: Text('${entry.value}')),
                       ],
                     ),
                   ),

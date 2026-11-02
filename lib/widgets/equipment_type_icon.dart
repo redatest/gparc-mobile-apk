@@ -5,7 +5,7 @@ class EquipmentTypeIcon {
   EquipmentTypeIcon._();
 
   static IconData forType(Object? rawType) {
-    final type = _normalize('\${rawType ?? ''}');
+    final type = _normalize('${rawType ?? ''}');
     if (type.isEmpty) return Icons.devices_other;
 
     if (_has(type, ['portable', 'laptop', 'notebook', 'pc mobile'])) {

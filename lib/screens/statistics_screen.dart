@@ -114,7 +114,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   String get _selectedName {
     if (selectedStructureId == null) return 'Toutes les structures';
     for (final row in structures) {
-      if (row['id_str'] == selectedStructureId) return '\${row['lib_str'] ?? 'Structure'}';
+      if (row['id_str'] == selectedStructureId) return '${row['lib_str'] ?? 'Structure'}';
     }
     return 'Structure sélectionnée';
   }
@@ -153,7 +153,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               const DropdownMenuItem<int?>(value: null, child: Text('Toutes les structures')),
               ...structures.map((row) => DropdownMenuItem<int?>(
                 value: (row['id_str'] as num).toInt(),
-                child: Text('\${row['lib_str'] ?? 'Structure sans nom'}', overflow: TextOverflow.ellipsis),
+                child: Text('${row['lib_str'] ?? 'Structure sans nom'}', overflow: TextOverflow.ellipsis),
               )),
             ],
             onChanged: (value) {
@@ -193,14 +193,14 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
-                    Expanded(child: Text('\${row['type']}', style: const TextStyle(fontWeight: FontWeight.w600))),
-                    Text('$count  ·  \${(ratio * 100).toStringAsFixed(1)} %', style: const TextStyle(color: Color(0xFF60717D), fontSize: 12)),
+                    Expanded(child: Text('${row['type']}', style: const TextStyle(fontWeight: FontWeight.w600))),
+                    Text('$count  ·  ${(ratio * 100).toStringAsFixed(1)} %', style: const TextStyle(color: Color(0xFF60717D), fontSize: 12)),
                   ]),
                   const SizedBox(height: 5),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
-                      value: ratio.clamp(0.0, 1.0),
+                      value: ratio.clamp(0.0, 1.0).toDouble(),
                       minHeight: 9,
                       backgroundColor: const Color(0xFFE6EDF1),
                       color: const Color(0xFF258477),
@@ -227,7 +227,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       foregroundColor: Color(0xFF176B87),
                       child: Icon(Icons.account_tree_outlined, size: 19),
                     ),
-                    title: Text('\${row['lib_str'] ?? 'Structure sans nom'}', maxLines: 1, overflow: TextOverflow.ellipsis),
+                    title: Text('${row['lib_str'] ?? 'Structure sans nom'}', maxLines: 1, overflow: TextOverflow.ellipsis),
                     trailing: Text('$count', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                     onTap: () {
                       setState(() => selectedStructureId = (row['id_str'] as num).toInt());
